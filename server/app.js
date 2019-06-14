@@ -5,6 +5,7 @@ module.exports = () => {
 
   const app = express();
 
+  // Connect Database
   const con = mysql.createConnection({
     host: "localhost",
     user: "yash",
@@ -12,12 +13,16 @@ module.exports = () => {
     database: "calculator_n"
   });
 
+  // MiddleWares
+
   app.use(bodyparser.json());
   app.use(bodyparser.urlencoded({ extended: false }));
 
   app.set("view engine", "ejs");
   app.set("views", __dirname + "/views/");
   app.use(express.static(__dirname + "/public"));
+
+  // routes
 
   app.get("/", (req, res) => {
     res.render("index");
@@ -30,15 +35,11 @@ module.exports = () => {
     if (!con._connectCalled) {
       con.connect();
     }
-    // query = "\""+query+"\"";
+
+    // SQL query
+      
     var sql =
-      "INSERT INTO calci (query, result) VALUES (" +
-      '"' +
-      query +
-      '"' +
-      "," +
-      result +
-      ")";
+      "INSERT INTO calci (query, result) VALUES (" + '"' + query +'"' + "," + result + ")";
 
     con.query(sql, function(err, result) {
       if (err) throw err;
